@@ -1,8 +1,10 @@
-#Advent of Code day 9 problem 1
-#Made by Trevor Ferris
-#1/20/2025
+"""
+Advent of Code day 9 part 1
+Written by Trevor Ferris
+1/20/2025
+"""
 
-DISKMAP_FILENAME = "input.txt"
+DISKMAP_FILENAME = "Aoc9/input.txt"
 
 def load_map(file_name):
     inFile = open(file_name, 'r')
@@ -45,10 +47,9 @@ def check_sum(blocks):
 
 if __name__ == ('__main__'):
     disk_map = load_map(DISKMAP_FILENAME)
-    print("diskmap loaded")
+    print("Diskmap loaded")
     blocks = gen_blocks(disk_map)
-    print (''.join(str(blocks)))
-    print("blocks generated")
+    print("Disk built")
+    print("Fragmenting...")
     def_blocks = defrag(blocks.copy())
-    print("blocks defragmented")
-    print(check_sum(def_blocks))
+    print("Check sum:", check_sum(def_blocks))

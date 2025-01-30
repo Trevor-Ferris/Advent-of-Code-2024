@@ -4,7 +4,7 @@ Written by Trevor Ferris
 1/29/2025
 """
 
-MOVEMENT_FILENAME = "input.txt"
+MOVEMENT_FILENAME = "Aoc14/input.txt"
 B_WIDTH = 101
 B_HEIGHT = 103
 
@@ -55,14 +55,14 @@ def find_tree(pos: tuple[int], vel: tuple[int]) -> int:
         for i in range(len(pos)):
             end_pos.append(calc_pos(pos[i], vel[i], num_s))
         if check_dupe(end_pos):
-            print(num_s)
-            return end_pos
+            print_map(end_pos)
+            return num_s
         num_s += 1
 
 def main():
     pos, vel = load_movements(MOVEMENT_FILENAME)
-    print_map(find_tree(pos, vel))
-
+    print("Finding tree...")
+    print("Number of seconds to find tree:", find_tree(pos, vel))
 
 if __name__ == ("__main__"):
     main()

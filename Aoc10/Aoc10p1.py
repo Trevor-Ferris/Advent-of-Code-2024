@@ -1,11 +1,12 @@
 """
-Advent of code day 10 problem 1
-written by Trevor Ferris
+Advent of code day 10 part 1
+Written by Trevor Ferris
 1/23/2025
 """
+
 from typing import Iterator
 
-MAP_FILENAME = "input.txt"
+MAP_FILENAME = "Aoc10/input.txt"
 DIRS = [(1, 0), (0, 1), (-1, 0), (0, -1)]
 HIGH_VAL = 9
 
@@ -76,7 +77,7 @@ def check_score(t_map: list, trailheads: list) -> int:
 
 def main():
     t_map, trailheads = load_map(MAP_FILENAME)
-    print("score:", check_score(t_map, trailheads))
+    print("Map score:", check_score(t_map, trailheads))
 
 if __name__ == "__main__":
     main()

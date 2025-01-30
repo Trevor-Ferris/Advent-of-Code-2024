@@ -6,7 +6,7 @@ Written by Trevor Ferris
 
 from typing import Iterator
 
-MAP_FILENAME = "input.txt"
+MAP_FILENAME = "Aoc15/input.txt"
 DIRS = [">", "<", "v", "^"]
 
 class w_obj(object):
@@ -149,7 +149,7 @@ def sum_coords(fin_map: list[list[w_obj]]) -> Iterator:
 def main():
     w_map, moves, r_start = load_map(MAP_FILENAME)
     fin_map = read_directions(warehouse_copy(w_map), moves, r_start)
-    print(sum(sum_coords(fin_map)))
+    print("GPS Value:", sum(sum_coords(fin_map)))
 
 if __name__ == ("__main__"):
     main()

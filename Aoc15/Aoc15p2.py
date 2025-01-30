@@ -7,7 +7,7 @@ Written by Trevor Ferris
 from typing import Iterator
 from enum import StrEnum
 
-MAP_FILENAME = "input.txt"
+MAP_FILENAME = "Aoc15/input.txt"
 DIRS = [">", "<", "v", "^"]
 
 class Ob_type(StrEnum):
@@ -232,7 +232,6 @@ def read_directions(w_map: list[list[w_obj]], moves: list[str], r_pos: tuple[int
     """Reads the list of moves and moves the robot in the direction returns the new map"""
     for move in moves:
         r_pos = move_robot(r_pos, w_map, move)
-    print_map(w_map)
     return w_map
 
 def sum_coords(fin_map: list[list[w_obj]]) -> Iterator:

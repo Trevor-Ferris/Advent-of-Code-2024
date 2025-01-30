@@ -1,8 +1,10 @@
-#Advent of Code day 6 problem 2
-#Made by Trevor Ferris
-#1/17/2025
+"""
+Advent of Code day 6 part 2
+Written by Trevor Ferris
+1/17/2025
+"""
 
-MAZE_FILENAME = "input.txt"
+MAZE_FILENAME = "Aoc6/input.txt"
 
 def load_maze(file_name):
     inFile = open(file_name, 'r')
@@ -20,7 +22,7 @@ def change_dir(dir):
     return new_dir
 
 def calc_next_pos(pos_x, pos_y, dir):
-    '''returns the number direction of the arrow'''    
+    '''Returns the number direction of the arrow'''    
     match dir:
         case '<':
             pos_y -= 1
@@ -29,18 +31,18 @@ def calc_next_pos(pos_x, pos_y, dir):
         case 'v':
             pos_x += 1
         case '^':
-            pos_x -=1
+            pos_x -= 1
     return(pos_x, pos_y)
 
 def maze_copy(maze):
-    '''returns a deepcopy of maze'''
+    '''Returns a deepcopy of maze'''
     new_maze = []
     for item in maze:
         new_maze.append(list(item))
     return new_maze
           
 def calc_path(maze, pos_x, pos_y, dir):
-    '''moves the arrow around until it runs off the map placing an recording a set of coordinates that have been pathed through'''
+    '''Moves the arrow around until it runs off the map placing an recording a set of coordinates that have been pathed through'''
     marked = set({})
     while True:
         marked.add((pos_x, pos_y))
@@ -55,7 +57,7 @@ def calc_path(maze, pos_x, pos_y, dir):
     return len(marked)
 
 def check_loop(maze, pos_x, pos_y, dir):
-    '''records for each direction which obstacles it has hit, if the pathing hits the same obstacle from the same direction then a loop has been made
+    '''Records for each direction which obstacles it has hit, if the pathing hits the same obstacle from the same direction then a loop has been made
         otherwise if the arrow goes out of bounds there is no loop'''
     bounced = {'<' : [], 'v' : [], '>' : [], '^' : []}
     while True:

@@ -1,8 +1,11 @@
-#Advent of Code day 8 problem 2
-#Made by Trevor Ferris
-#1/20/2025
+"""
+Advent of Code day 8 part 2
+Written by Trevor Ferris
+1/20/2025
+Notes: Part 1 is lost
+"""
 
-MAP_FILENAME = "Documents\Python Practice\Aoc8\input.txt"
+MAP_FILENAME = "Aoc8/input.txt"
 
 def load_map(file_name):
     inFile = open(file_name, 'r')
@@ -47,4 +50,4 @@ def check_antinodes(tower_dict, syg_map):
 if __name__ == ('__main__'):
     syg_map = load_map(MAP_FILENAME)
     tower_dict = build_dict(syg_map)
-    print(check_antinodes(tower_dict, syg_map))
+    print("Number of antinodes:", check_antinodes(tower_dict, syg_map))

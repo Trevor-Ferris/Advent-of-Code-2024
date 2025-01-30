@@ -1,5 +1,5 @@
 """
-Advent of code day 11 problem 1
+Advent of code day 11 part 1
 Written by Trevor Ferris
 1/23/2025
 """
@@ -7,7 +7,7 @@ Written by Trevor Ferris
 from time import time
 from typing import Iterator
 
-STONES_FILENAME = "input.txt"
+STONES_FILENAME = "Aoc11/input.txt"
 NUM_BLINKS = 25
 
 next_dict = {}
@@ -43,7 +43,7 @@ def run_blinks(stones: list) -> int:
 def main():
     start_time = time()
     stones = load_stones(STONES_FILENAME)
-    print(run_blinks(stones))
+    print("Number of stones after", NUM_BLINKS, "blinks:", run_blinks(stones))
     end_time = time()
     print(f"Run time: {end_time - start_time}")
 

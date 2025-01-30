@@ -1,8 +1,10 @@
-#Advent of Code day 6 problem 2
-#Made by Trevor Ferris
-#1/17/2025
+"""
+Advent of Code day 7 part 2
+Written by Trevor Ferris
+1/17/2025
+"""
 
-BRIDGE_FILENAME = "Documents\Python Practice\Aoc7\input.txt"
+BRIDGE_FILENAME = "Aoc7/input.txt"
 
 def load_bridge(file_name):
     inFile = open(file_name, 'r')
@@ -33,11 +35,11 @@ def check_results(results, nums):
     total_corr = 0
     for index, result in enumerate(results):
         pos_res = calc_after(nums[index])
-        print (pos_res)
         if result in pos_res:
             total_corr += result
     return total_corr
 
 if __name__ == ('__main__'):
     (results, nums) = load_bridge(BRIDGE_FILENAME)
-    print(check_results(results, nums))
+    print("Calibrating...")
+    print("Calibration result:", check_results(results, nums))

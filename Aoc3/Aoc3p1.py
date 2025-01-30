@@ -1,8 +1,10 @@
-#Advent of Code day 1 problem 1
-#Made by Trevor Ferris
-#1/15/2025
+"""
+Advent of Code day 3 problem 1
+Written by Trevor Ferris
+1/15/2025
+"""
 
-REPORTS_FILENAME = "Documents\Python Practice\Aoc3\input.txt"
+REPORTS_FILENAME = "Aoc3/input.txt"
 
 def load_reports(file_name):
     inFile = open(file_name, 'r')
@@ -14,9 +16,7 @@ def find_muls(reports):
     while mul_start != -1:
         mul_start = reports.find("mul(")
         reports = reports[mul_start:]
-        temp_muls = 0
-        mult1 = 0
-        mult2 = 0
+        temp_muls, mult1, mult2 = 0, 0, 0
         if reports.find(")") < 12:
             temp_muls = reports[4:reports.find(")")]           
             if temp_muls.find(",") != -1:
@@ -38,8 +38,7 @@ def multiply_muls(muls):
         total_val += (pairs[0] * pairs [1])
     return total_val
 
-
 if __name__ == ("__main__"):
     reports = load_reports(REPORTS_FILENAME)
     muls = find_muls(reports)
-    print(multiply_muls(muls))
+    print("Multiplication results:", multiply_muls(muls))

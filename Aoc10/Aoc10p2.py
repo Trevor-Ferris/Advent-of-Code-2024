@@ -1,11 +1,12 @@
 """
-Advent of code day 10 problem 1
-written by Trevor Ferris
+Advent of code day 10 part 2
+Written by Trevor Ferris
 1/23/2025
 """
+
 from typing import Iterator
 
-MAP_FILENAME = "input.txt"
+MAP_FILENAME = "Aoc10/input.txt"
 DIRS = [(1, 0), (0, 1), (-1, 0), (0, -1)]
 HIGH_VAL = 9
 
@@ -69,14 +70,12 @@ def check_score(t_map: list, trailheads: list) -> int:
     """Returns the total score of all trailheads"""
     score = 0
     for start_pos in trailheads:
-        """print("start pos:", start_pos)
-        print("score:", sum(check_adj(start_pos, 0, copy_map(t_map))))"""
         score += sum(check_adj(start_pos, 0, copy_map(t_map)))
     return score
 
 def main():
     t_map, trailheads = load_map(MAP_FILENAME)
-    print("score:", check_score(t_map, trailheads))
+    print("Map score:", check_score(t_map, trailheads))
 
 if __name__ == "__main__":
     main()

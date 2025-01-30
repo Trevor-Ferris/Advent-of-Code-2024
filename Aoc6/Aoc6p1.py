@@ -1,8 +1,10 @@
-#Advent of Code day 6 problem 2
-#Made by Trevor Ferris
-#1/17/2025
+"""
+Advent of Code day 6 part 2
+Written by Trevor Ferris
+1/17/2025
+"""
 
-MAZE_FILENAME = "Documents\Python Practice\Aoc6\input.txt"
+MAZE_FILENAME = "Aoc6/input.txt"
 
 def load_maze(file_name):
     inFile = open(file_name, 'r')
@@ -57,7 +59,7 @@ def move_arrow(maze, pos_x, pos_y, dir):
                 return (maze, pos_x - 1, pos_y, dir)
             
 def calc_path(maze, pos_x, pos_y, dir):
-    '''moves the arrow around until it runs off the map'''
+    '''Moves the arrow around until it runs off the map'''
     while pos_x in range(len(maze)) and pos_y in range(len(maze[pos_x])):
         maze, pos_x, pos_y, dir = move_arrow(maze, pos_x, pos_y, dir)
     return maze
@@ -66,8 +68,6 @@ def checkMaze(maze):
     dirs = ['<', '^', '>', 'v']
     dir = ''
     pos_x, pos_y = 0, 0
-    for line in maze:
-        print(str(''.join(line)))
     for x in range(len(maze)):
         if any(value in dirs for value in maze[x]):
             for y in range(len(dirs)):
@@ -75,9 +75,6 @@ def checkMaze(maze):
                     dir = dirs[y]
                     pos_x = x
                     pos_y = maze[x].index(dir)
-    print("dir:", dir)
-    print("posx:",pos_x)
-    print("posy:",pos_y)
     maze = calc_path(maze, pos_x, pos_y, dir)
     for line in maze:
         print(str(''.join(line)))
@@ -85,5 +82,5 @@ def checkMaze(maze):
        
 if __name__ == ("__main__"):
     maze = load_maze(MAZE_FILENAME)
-    print (checkMaze(maze))
+    print ("Path length:", checkMaze(maze))
 

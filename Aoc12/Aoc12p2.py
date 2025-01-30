@@ -1,12 +1,12 @@
 """
-Advent of code day 12 problem 1
+Advent of code day 12 part 1
 Written by Trevor Ferris
 1/25/2025
 """
 
 from typing import Iterator
 
-PLOTS_FILENAME = "input.txt"
+PLOTS_FILENAME = "Aoc12/input.txt"
 DIRS = [(0, 1), (1, 0), (0, -1), (-1, 0)]
 
 class plot(object):
@@ -81,14 +81,13 @@ def check_plots(plots: list) -> int:
                 for val in peri_area:
                     peri += val[0]
                     area += val[1]
-                print(area, peri, plots[x][y].check_letter())
                 total += (peri * area)
     return total
 
 def main():
     plots = load_plots(PLOTS_FILENAME)
-    print(check_plots(plots))
-    print("done")
+    print("Calculating fencing cost...")
+    print("Total fencing cost:", check_plots(plots))
 
 if __name__ == ("__main__"):
     main()

@@ -1,12 +1,14 @@
-#Advent of Code day 5 problem 2
-#Made by Trevor Ferris
-#1/17/2025
+"""
+Advent of Code day 5 part 2
+Written by Trevor Ferris
+1/17/2025
+"""
 
-MANUALS_FILENAME = "Documents\Python Practice\Aoc5\input.txt"
+MANUALS_FILENAME = "Aoc5/input.txt"
 
 def load_manuals(file_name):
     inFile = open(file_name,'r')
-    rules, rev_rules = {},{}
+    rules, rev_rules = {}, {}
     pages = []
     for line in inFile:
         if line == '\n':
@@ -26,7 +28,7 @@ def check_rules(page, rules, pos):
     if pos == len(page):
         return True
     if rules.get(page[pos]):
-        if any(value in rules[page[pos]] for value in page[0:pos]):
+        if any(value in rules[page[pos]] for value in page[0 : pos]):
             return False
     return check_rules(page, rules, pos + 1)
 
@@ -44,7 +46,7 @@ def check_reports(rules, pages):
     mid_value, pos = 0, 0
     for page in pages:
         if check_rules(page, rules, pos):
-            mid_value += page[int(len(page)/2)]
+            mid_value += page[int(len(page) / 2)]
             print(page)
     return mid_value
 
@@ -53,10 +55,10 @@ def check_inc_reps(rules, pages):
     for page in pages:
         if not check_rules(page, rules, pos):
             page = fix_report(page, rules, pos)
-            mid_value += page[int(len(page)/2)]
+            mid_value += page[int(len(page) / 2)]
     return mid_value
 
 if __name__ == ("__main__"):
     rules, rev_rules, pages = load_manuals(MANUALS_FILENAME)
-    print(check_inc_reps(rules, pages))
+    print("Total of middle page numbers from incorrectly ordered reports:", check_inc_reps(rules, pages))
 

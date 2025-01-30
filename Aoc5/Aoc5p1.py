@@ -1,8 +1,10 @@
-#Advent of Code day 5 problem 1
-#Made by Trevor Ferris
-#1/17/2025
+"""
+Advent of Code day 5 part 1
+Written by Trevor Ferris
+1/17/2025
+"""
 
-MANUALS_FILENAME = "Documents\Python Practice\Aoc5\input.txt"
+MANUALS_FILENAME = "Aoc5/input.txt"
 
 def load_manuals(file_name):
     inFile = open(file_name)
@@ -11,7 +13,7 @@ def load_manuals(file_name):
     for line in inFile:
         if line == '\n':
             continue
-        line = line.replace('\n','')    
+        line = line.replace('\n', '')    
         if line.count('|'):
             rule = (list(map(int,line.split('|'))))
             if rule[0] in rules:
@@ -23,7 +25,7 @@ def load_manuals(file_name):
     return (rules, pages)
 
 def check_rules(page, rules, pos):
-    if pos == len(page)-1:
+    if pos == len(page) - 1:
         return True
     if any(value in rules[page[pos]] for value in page[0:pos]):
         return False
@@ -34,11 +36,11 @@ def check_reports(rules, pages):
     pos = 0
     for page in pages:
         if check_rules(page, rules, pos):
-            mid = int(len(page)/2)
-            mid_value += page[int(len(page)/2)]
+            mid = int(len(page) / 2)
+            mid_value += page[int(len(page) / 2)]
     return mid_value
             
 if __name__ == ("__main__"):
     rules, pages = load_manuals(MANUALS_FILENAME)
-    print(check_reports(rules, pages))
+    print("Total of middle page numbers from correctly ordered reports:", check_reports(rules, pages))
 

@@ -1,13 +1,14 @@
 """
-Advent of code day 11 problem 2
+Advent of code day 11 part 2
 Written by Trevor Ferris
 1/23/2025
+Notes: Twice as fast but looks less readable
 """
 
 from time import time
 from typing import Iterator
 
-STONES_FILENAME = "input.txt"
+STONES_FILENAME = "Aoc11/input.txt"
 NUM_BLINKS = 75
 
 next_dict = {}
@@ -71,7 +72,7 @@ def run_blinks(stones: list, blink_dict: dict) -> Iterator[int]:
 def main():
     start_time = time()
     stones = load_stones(STONES_FILENAME)   
-    print(sum(run_blinks(stones, build_blink_dict())))
+    print("Number of stones after", NUM_BLINKS, "blinks:", sum(run_blinks(stones, build_blink_dict())))
     end_time = time()
     print(f"Run time: {end_time - start_time}")
 

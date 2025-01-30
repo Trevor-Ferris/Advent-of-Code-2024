@@ -4,7 +4,7 @@ Written by Trevor Ferris
 1/29/2025
 """
 
-MOVEMENT_FILENAME = "input.txt"
+MOVEMENT_FILENAME = "Aoc14/input.txt"
 NUM_SECONDS = 100
 B_WIDTH = 101
 B_HEIGHT = 103
@@ -63,8 +63,7 @@ def calc_safety(end_pos: list[tuple[int]]) -> int:
 def main():
     pos, vel = load_movements(MOVEMENT_FILENAME)
     end_pos = calc_end_pos(pos, vel)
-    print_map(end_pos)
-    print(calc_safety(end_pos))
+    print("Safety score:", calc_safety(end_pos))
 
 if __name__ == ("__main__"):
     main()

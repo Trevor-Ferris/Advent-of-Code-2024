@@ -1,13 +1,14 @@
 """
-Advent of code day 12 problem 1
+Advent of code day 12 part 1
 Written by Trevor Ferris
 1/25/2025
 """
 
 from typing import Iterator
 
-PLOTS_FILENAME = "input.txt"
+PLOTS_FILENAME = "Aoc12/input.txt"
 DIRS = [(1, 0), (0, 1), (-1, 0), (0, -1)]
+
 def load_plots(file_name):
     plot_starts = {}
     plots = []
@@ -35,7 +36,6 @@ def check_adj(plots: list, pos: tuple, checked: list) -> Iterator[tuple]:
         else:
             yield (1, 0)
 
-
 def check_plots(plots: list, plot_starts: dict) -> int:
     """Run through a each plot start and then calculate cost based on results"""
     total = 0
@@ -48,14 +48,13 @@ def check_plots(plots: list, plot_starts: dict) -> int:
                 for val in peri_area:
                     peri += val[0]
                     area += val[1]
-                print(area, peri, plots[x][y])
                 total += (peri * area)
     return total
 
 def main():
     plots, plot_starts = load_plots(PLOTS_FILENAME)
-    print(check_plots(plots, plot_starts))
-    print("done")
+    print("Calculating fencing cost...")
+    print("Total fencing cost:", check_plots(plots, plot_starts))
 
 if __name__ == ("__main__"):
     main()

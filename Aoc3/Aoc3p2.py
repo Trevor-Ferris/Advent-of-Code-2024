@@ -1,8 +1,10 @@
-#Advent of Code day 3 problem 2
-#Made by Trevor Ferris
-#1/15/2025
+"""
+Advent of Code day 3 part 2
+Written by Trevor Ferris
+1/15/2025
+"""
 
-REPORTS_FILENAME = "Documents\Python Practice\Aoc3\input.txt"
+REPORTS_FILENAME = "Aoc3/input.txt"
 
 def load_reports(file_name):
     inFile = open(file_name, 'r')
@@ -36,7 +38,7 @@ def find_muls(reports):
                     mult2 = int(mults[1])
                 if (mult1 > 0 and mult2 > 0) and enabled:
                     muls.append((mult1, mult2))
-            reports = reports[reports.find(")")+1:]
+            reports = reports[reports.find(")") + 1:]
         else:
             reports = reports[1:]
     return muls
@@ -47,8 +49,7 @@ def multiply_muls(muls):
         total_val += (pairs[0] * pairs [1])
     return total_val
 
-
 if __name__ == ("__main__"):
     reports = load_reports(REPORTS_FILENAME)
     muls = find_muls(reports)
-    print(multiply_muls(muls))
+    print("Enabled multiplication results:", multiply_muls(muls))
