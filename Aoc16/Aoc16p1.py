@@ -23,7 +23,6 @@ class M_obj(StrEnum):
 
 class Rotation(IntEnum):
     CW = 3
-    BKW = 2
     CCW = 1
 
 class Facing(StrEnum):
@@ -31,7 +30,24 @@ class Facing(StrEnum):
     EAST = ">"
     SOUTH = "v"
     WEST = "<"
-       
+
+class Maze_tile(object):
+    def __init__(self, type):
+        self.type = type
+        self.score = BAD_MAZE
+
+    def get_type(self):
+        return self.type
+
+    def get_score(self):
+        return self.score
+
+    def set_score(self, score):
+        self.score = score
+    
+    def set_type(self, type):
+        self.type = type
+      
 def load_maze(file_name: str):
     """Builds maze from given file"""
     maze = []
@@ -42,9 +58,11 @@ def load_maze(file_name: str):
             for y, col in enumerate(row):
                 if col == M_obj.START:
                     start_pos = (x, y)
-                maze_row.append(col)
+                if col == M_obj.END:
+                    end_pos = (x, y)
+                maze_row.append(Maze_tile(col))
             maze.append(maze_row)
-    return maze, start_pos
+    return maze, start_pos, end_pos
 
 def maze_copy(maze):
     new_maze = []
@@ -53,10 +71,10 @@ def maze_copy(maze):
         new_maze.append(maze_row)
     return new_maze
 
-def print_maze(maze: list[list[M_obj]]):
+def print_maze(maze: list[list[Maze_tile]]):
     """Print maze for debugging"""
     for row in maze:
-        print("".join(ch for ch in row))
+        print("".join(ch.get_type() for ch in row))
 
 def dir_check(dir: Facing) -> tuple[int, int]:
     """Gives coordinate movement of given direction"""
@@ -74,39 +92,40 @@ def rot_dir(dir: Facing, rot: Rotation):
     facings = list(Facing)
     return facings[facings.index(dir) - rot]
 
-def check_next(maze: list[list[str]], pos, dir):
+def check_wall(maze: list[list[Maze_tile]], pos, dir):
     new_pos = dir_check(dir)
-    if maze[pos[0] + new_pos[0]][pos[1] + new_pos[1]] not in  (M_obj.EMPTY, M_obj.END):
-        return False
-    return True
+    if maze[pos[0] + new_pos[0]][pos[1] + new_pos[1]].get_type() != M_obj.WALL:
+        return True
+    return False
 
-def run_maze(maze: list[list[str]], pos: tuple[int, int], dir: Facing):   
-    if maze[pos[0]][pos[1]] == M_obj.END:
-        print_maze(maze)
-        return 0
-    maze[pos[0]][pos[1]] = dir
-    if check_next(maze, pos, dir):
+def run_maze(maze: list[list[Maze_tile]], pos: tuple[int, int], dir: Facing, tile_score: int, turned: bool):   
+    while True:
+        #check potential turns and call run maze with the turned direction
+        if not turned:    
+            if check_wall(maze, pos, cw := rot_dir(dir, Rotation.CW)):
+                run_maze(maze, pos, cw, tile_score + TURN_COST, True)
+            if check_wall(maze, pos, ccw := rot_dir(dir, Rotation.CCW)):
+                run_maze(maze, pos, ccw, tile_score + TURN_COST, True)
+        #check if the next object is a wall break if so
+        turned = False
+        if not check_wall(maze, pos, dir):
+            break
+        #Check if the next tile has a higher score than the current tile_score 
         fwd = dir_check(dir)
-        y1 = MOVE_COST + run_maze(maze_copy(maze), (pos[0] + fwd[0], pos[1] + fwd[1]), dir)
-    else:
-        y1 = BAD_MAZE
-    if check_next(maze, pos, clock := rot_dir(dir, Rotation.CW)):
-        cw = dir_check(clock)
-        y2 = TURN_COST + MOVE_COST + run_maze(maze_copy(maze), (pos[0] + cw[0], pos[1] + cw[1]), clock)
-    else:
-        y2 = BAD_MAZE
-    if check_next(maze, pos, counter := rot_dir(dir, Rotation.CCW)):
-        ccw = dir_check(counter)
-        y3 = TURN_COST + MOVE_COST + run_maze(maze_copy(maze), (pos[0] + ccw[0], pos[1] + ccw[1]), counter)
-    else:
-        y3 = BAD_MAZE
-    return min(y1, y2, y3)         
-   
+        if tile_score + MOVE_COST < maze[pos[0] + fwd[0]][pos[1] + fwd[1]].get_score():
+        #Update the value to the current value if it is lower
+            maze[pos[0] + fwd[0]][pos[1] + fwd[1]].set_score(tile_score + MOVE_COST)
+            pos = (pos[0] + fwd[0], pos[1] + fwd[1])
+            tile_score += MOVE_COST         
+        #Break if higher
+        else:
+            break
+ 
 def main():
-    maze, start_pos = load_maze(MAZE_FILENAME)
+    maze, start_pos, end_pos = load_maze(MAZE_FILENAME)
     print(list(Facing))
     print_maze(maze)
-    print(run_maze(maze, start_pos, INIT_FACING))
-
+    run_maze(maze, start_pos, INIT_FACING, 0, False)
+    print(maze[end_pos[0]][end_pos[1]].get_score())
 if __name__ == ("__main__"):
     main()
