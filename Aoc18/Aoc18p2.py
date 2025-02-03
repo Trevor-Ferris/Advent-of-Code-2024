@@ -2,16 +2,19 @@
 Advent of Code day 18 part 1
 Written by Trevor Ferris
 2/2/2025
+Notes: Spent a lot of time trying to figure out a way to do it with only running the maze one time and gave up eventually
+surprised at how fast the bisection search ended up though
 """
 
-from enum import StrEnum
 import sys
+from enum import StrEnum
+from time import time
 
 sys.setrecursionlimit(2000)
 
 COORD_FILENAME = "Aoc18/input.txt"
 MAP_SIZE = 70
-NUM_BYTES = 1024
+NUM_BYTES = 3450
 NOT_VISITED = 10000
 DIRS = [(-1, 0), (1, 0), (0, -1), (0, 1)]
 
@@ -53,7 +56,6 @@ def print_maze(maze: list[list[Maze_tile]]):
     for x in maze:
         print("".join(ch.get_type() for ch in x))
 
-
 def build_maze(bytes: list[tuple[int, int]]) -> list[list[Maze_tile]]:
     """Builds a maze of MAP_SIZE x MAP_SIZE with the bytes as walls"""
     maze = []
@@ -62,9 +64,9 @@ def build_maze(bytes: list[tuple[int, int]]) -> list[list[Maze_tile]]:
         maze_row = []
         for x in range(MAP_SIZE + 1):
             if (x, y) in bytes:
-                maze_row.append(Maze_tile("#"))
+                maze_row.append(Maze_tile(M_type.WALL))
             else:
-                maze_row.append(Maze_tile("."))
+                maze_row.append(Maze_tile(M_type.EMPTY))
         maze.append(maze_row)
     return maze
 
@@ -84,12 +86,27 @@ def find_maze(maze: list[list[Maze_tile]], x: int, y: int, cost: int):
             if check_next(maze[x + dir[0]][y + dir[1]], cost + 1):
                 find_maze(maze, x + dir[0], y + dir[1], cost + 1)
 
+def maze_search(bytes):
+    """Bisection search for the last completable maze"""
+    b_high = NUM_BYTES
+    b_low = 0
+    while True:
+        if (b_high + b_low) // 2 == b_low:
+            return bytes[b_low]
+        print(f"Testing {(b_high + b_low) // 2}...")
+        maze = build_maze(bytes[:((b_high + b_low) // 2)])
+        find_maze(maze, 0, 0, 0)
+        if maze[MAP_SIZE][MAP_SIZE].get_travel_cost() == NOT_VISITED:
+            b_high = (b_high + b_low) // 2
+        else:
+            b_low = (b_high + b_low) // 2
+
 def main():
+    start_time = time()
     bytes = load_bytes(COORD_FILENAME)
-    maze = build_maze(bytes)
-    print_maze(maze)
-    find_maze(maze, 0, 0, 0)
-    print(f"Fastest path to reach exit: {maze[MAP_SIZE][MAP_SIZE].get_travel_cost()}")
+    print(f"First byte that makes an unsolvable maze: {maze_search(bytes)}")
+    end_time = time()
+    print(f"Run time: {end_time - start_time}")
 
 if __name__ == ("__main__"):
     main()
