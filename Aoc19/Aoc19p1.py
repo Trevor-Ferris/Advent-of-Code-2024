@@ -8,6 +8,7 @@ from time import time
 TOWELS_FILENAME = "Aoc19/input.txt"
 
 def load_towels(file_name: str) -> tuple[list[str], list[str]]:
+    """Load list of towels and displays from file"""
     displays = []
     with open(file_name, "r") as towel_file:
         towels_file = towel_file.readline()
@@ -20,6 +21,7 @@ def load_towels(file_name: str) -> tuple[list[str], list[str]]:
     return towels, displays 
 
 def check_display(towels, display, long_towel):
+    """Returns true if the display can be made from any combination of towels"""
     if display in towels:
         return True
     for pos in range(1, len(display)):
@@ -30,6 +32,7 @@ def check_display(towels, display, long_towel):
     return False
 
 def find_num_displays(towels, displays):
+    """Returns the total number of valid displays"""
     long_towel = max([len(towel) for towel in towels])
     for display in displays:
         if check_display(towels, display, long_towel):
