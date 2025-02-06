@@ -1,8 +1,10 @@
 """
-Advent of Code day 21 part 1
+Advent of Code day 21 part 2
 Written by Trevor Ferris
 2/4/2025
-Notes: rough
+Notes: Super happy with how fast it runs, not super happy about some of the implementations
+In retrospect I think the path finding was a bit too manual and could potentially have been done through the second order outer keypad
+Also at one point in testing I made python use 13GB of RAM so that was fun
 """
 
 from enum import StrEnum
@@ -11,10 +13,9 @@ from time import time
 CODES_FILENAME = "Aoc21/input.txt"
 INNER_BUTTON = "Aoc21/inner_button.txt"
 OUTER_BUTTON = "Aoc21/outer_button.txt"
-NUM_OUTER_KEYPADS = 3
+NUM_OUTER_KEYPADS = 25
 INNER_VALS = " 0A123456789"
 OUTER_VALS = "<v> ^A"
-DIRS = ["<","^", "v", ">"]
 
 class Buttons(StrEnum):
     UP = "^"
@@ -100,7 +101,7 @@ def find_fastest_path(buttons: list[list[str]], button_vals, start, tar: str):
             for y in range(abs(diff_y)):
                 path.append(dir_check((0, diff_y / abs(diff_y))))
     path.append(Buttons.ENTER.value)
-    return path
+    return "".join(path)
             
 def build_button_dict(buttons: list[list[str]], button_vals) -> dict[str: str]:
     """Builds a dictionary of each button and the sequences of directions to reach each button from there"""
@@ -117,51 +118,80 @@ def build_button_dict(buttons: list[list[str]], button_vals) -> dict[str: str]:
                 button_dict[val].append(find_fastest_path(buttons, button_vals, val, tar))
     return button_dict
 
-def calc_outer_codes(code, inner_dict, outer_dict):    
-    #Set robot starting positions
-    robot_pos = [Buttons.ENTER.value for x in range(NUM_OUTER_KEYPADS + 2)]
-    total_buttons = []
-    #iterate through each value in the code
-    for inner in code:
-        #make a list of the moves this robot needs to take to reach the value
-        button_list = (inner_dict[robot_pos[0]][INNER_VALS.index(inner)])
-        #move the robot to the position 
-        robot_pos[0] = inner
-        #iterate through the list a number of times equal to the number of keypads
-        for x in range(NUM_OUTER_KEYPADS - 1):
-            new_button_list = []
-            for outer in button_list:
-                #add the list of moves needed to a new list
-                new_button_list.extend(outer_dict[robot_pos[x + 1]][OUTER_VALS.index(outer)])
-                #move the robot to the position
-                robot_pos[x + 1] = outer
-            #make the button list equal to the new button list
-            button_list = new_button_list
-        #add the list to the total buttons and move to the next value
-        total_buttons.extend(button_list)
-    #print (code, ":", "".join(total_buttons))
-    return total_buttons
+def build_deep_dict(button_dict):
+    "Builds a dictionary of multiple order outer button presses"
+    #Build a set containing each possible button code
+    all_dir_codes = set()
+    for vals in button_dict.values():
+        for val in vals:
+            if val != "BLANK":
+                all_dir_codes.add("".join(ch for ch in val))
+    #Build a dictionary containing each of those values keyed to a list of strings containing the value after list index number of buttons
+    deep_dict = {val: [len(val)] for val in all_dir_codes}
+    #Iterate through each value in the dictionary a number of times equal to the outer keypads
+    for x in range(1, NUM_OUTER_KEYPADS):
+        for code in deep_dict:
+            #For each code find the next next code and then divide the code into individual button presses
+            button_presses = []
+            code_len = 0
+            new_button = ""
+            r_pos = Buttons.ENTER.value
+            for input in code:
+                new_button += button_dict[r_pos][OUTER_VALS.index(input)]
+                r_pos = input
+            while Buttons.ENTER in new_button:
+                button_presses.append(new_button[:new_button.index(Buttons.ENTER) + 1])
+                new_button = new_button[new_button.index(Buttons.ENTER) + 1:]
+            #The dict contains all used button combinations up to x - 1, since the previous step used one keypad each button resulting is in the dict
+            for button in button_presses:
+                code_len += deep_dict[button][x - 1]
+            #append the sum of the buttons to the end of the list
+            deep_dict[code].append(code_len)
+    return deep_dict
 
-def calc_complexity(codes, inner_dict, outer_dict):
+def calc_outer_codes(code, inner_dict, outer_dict, deep_dict):
+    """Calculates the length of a code from the number of keypads"""
+    robot_pos = Buttons.ENTER.value
+    end_code = 0
+    for inner in code:
+        #Make a list of the moves the inner robot takes
+        button_list = (inner_dict[robot_pos][INNER_VALS.index(inner)])
+        #Move the robot to the position for the next code 
+        robot_pos = inner
+        #Generate the initial list of moves on the first outer keypad
+        robot_pos2 = Buttons.ENTER.value
+        new_button_list = []
+        for outer in button_list:
+            #Add the list of moves needed to a new list
+            new_button_list.extend(outer_dict[robot_pos2][OUTER_VALS.index(outer)])
+            #Move the robot to the position
+            robot_pos2 = outer
+        #Break the button into whole button inputs and add the lengths together 
+        code_copy = "".join(new_button_list)
+        button_presses = []
+        while Buttons.ENTER in code_copy:
+            button_presses.append(code_copy[:code_copy.index(Buttons.ENTER) + 1])
+            code_copy = code_copy[code_copy.index(Buttons.ENTER) + 1:]
+        outer_code = 0
+        for button in button_presses:
+            outer_code += deep_dict[button][NUM_OUTER_KEYPADS - 1]
+        end_code += outer_code
+    return end_code
+
+def calc_complexity(codes, inner_dict, outer_dict, deep_dict):
     """Calculates the complexity score of a list of codes"""
     for code in codes:       
-        print("...")
-        yield int("".join(ch for ch in code if ch.isnumeric())) * len(calc_outer_codes(code, inner_dict, outer_dict))
+        yield int("".join(ch for ch in code if ch.isnumeric())) * calc_outer_codes(code, inner_dict, outer_dict, deep_dict)
 
 def main():
     start_time = time()
     codes = load_codes(CODES_FILENAME)
     inner_dict = build_button_dict(build_button(INNER_BUTTON), INNER_VALS)
     outer_dict = build_button_dict(build_button(OUTER_BUTTON), OUTER_VALS)   
-    print(sum(calc_complexity(codes, inner_dict, outer_dict)))
+    deep_dict = build_deep_dict(outer_dict)
+    print(sum(calc_complexity(codes, inner_dict, outer_dict, deep_dict)))
     end_time = time()
     print(f"Time elapsed{end_time - start_time}")
-    """for key, vals in inner_dict.items():
-        for i, val in enumerate(vals):
-            print (f"{key} to {INNER_VALS[i]} path: {val}")
-    for key, vals in outer_dict.items():
-        for i, val in enumerate(vals):
-            print (f"{key} to {OUTER_VALS[i]} path: {val}")"""
 
 if __name__ == ("__main__"):
     main()
