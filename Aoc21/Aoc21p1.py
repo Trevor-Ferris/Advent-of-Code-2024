@@ -71,7 +71,7 @@ def find_fastest_path(buttons: list[list[str]], button_vals: str, start: str, ta
     Returns:
         The fastest path from start to tar given as arrows (><v^) terminated by A
     """
-    
+
     path = []
     #find the coordinates of the two buttons in the lists 
     start_pos = (len(buttons) - (button_vals.index(start) // len(buttons[0]) + 1), 
@@ -156,7 +156,7 @@ def main():
     codes = load_codes(CODES_FILENAME)
     inner_dict = build_button_dict(build_button(INNER_BUTTON), INNER_VALS)
     outer_dict = build_button_dict(build_button(OUTER_BUTTON), OUTER_VALS)   
-    print(sum(calc_complexity(codes, inner_dict, outer_dict)))
+    print(f"Complexity score: {sum(calc_complexity(codes, inner_dict, outer_dict))}")
     end_time = time()
     print(f"Time elapsed{end_time - start_time}")
 

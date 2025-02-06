@@ -37,7 +37,7 @@ def prune(price: int) -> int:
 def mix(price: int, n_price: int) -> int:
     return price ^ n_price
 
-def init_diff_dict() -> dict[tuple(int, int, int, int): list()]:
+def init_diff_dict() -> dict[tuple[int, int, int, int]: list]:
     """Initializes a dictionary containing each possible set of diffs"""
 
     diff_dict = {}
@@ -83,8 +83,9 @@ def main():
     start_time = time()
     prices = load_prices(PRICE_FILENAME)
     print("Calculating best sequence")
-    print((calc_secret(prices)))
+    print(f"Highest value: {(calc_secret(prices))}")
     end_time = time()
     print(f"Time: {end_time - start_time}")
+
 if __name__ == ("__main__"):
     main()

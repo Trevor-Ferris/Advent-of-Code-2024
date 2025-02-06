@@ -35,7 +35,7 @@ def calc_secret(prices: int) -> Iterator[int]:
 def main():
     start_time = time()
     prices = load_prices(PRICE_FILENAME)
-    print(sum(calc_secret(prices)))
+    print(f"Total of secret prices: {sum(calc_secret(prices))}")
     end_time = time()
     print(f"Time: {end_time - start_time}")
 

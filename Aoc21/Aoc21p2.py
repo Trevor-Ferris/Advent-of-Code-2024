@@ -214,7 +214,7 @@ def main():
     inner_dict = build_button_dict(build_button(INNER_BUTTON), INNER_VALS)
     outer_dict = build_button_dict(build_button(OUTER_BUTTON), OUTER_VALS)   
     deep_dict = build_deep_dict(outer_dict)
-    print(sum(calc_complexity(codes, inner_dict, outer_dict, deep_dict)))
+    print(f"Complexity score: {sum(calc_complexity(codes, inner_dict, outer_dict, deep_dict))}")
     end_time = time()
     print(f"Time elapsed{end_time - start_time}")
 
