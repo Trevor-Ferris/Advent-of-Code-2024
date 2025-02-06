@@ -4,6 +4,7 @@ Written by Trevor Ferris
 2/5/2024
 """
 
+from typing import Iterator
 from time import time
 
 PRICE_FILENAME = "Aoc22/inputtest.txt"
@@ -13,17 +14,17 @@ M1 = 64
 M2 = 2048
 D1 = 32
 
-def load_prices(file_name):
+def load_prices(file_name: str) -> list[str]:
     with open(file_name, "r") as price_file:
         return [int(line.rstrip("\n")) for line in price_file]
 
-def prune(price):
+def prune(price: int) -> int:
     return price % PRUNE_MOD
 
-def mix(price, n_price):
+def mix(price: int, n_price: int) -> int:
     return price ^ n_price
 
-def calc_secret(prices):
+def calc_secret(prices: int) -> Iterator[int]:
     for price in prices:
         for x in range(NUM_SECRETS):
             price = prune(mix(price, price * M1))
@@ -37,5 +38,6 @@ def main():
     print(sum(calc_secret(prices)))
     end_time = time()
     print(f"Time: {end_time - start_time}")
+
 if __name__ == ("__main__"):
     main()
