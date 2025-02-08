@@ -21,23 +21,7 @@ because each wire can only recieve input from 1 gate
 dict of wires with values, list of gates 
 run down list of gates removing any gates which have both values and add the resulting wire to the dict of wires until the list is empty"""
 
-"""            Part 2
-System is trying to binary add x wires with y wires resulting in a z wire equal to x + y
-System should be taking in two n bit sets of wires and resulting in n + 1 bits on the z wire
-4 pairs of gates are swapped 
-record the output wire that is involved in the swap
-find which gates on the output are incorrect
-(from known answer XOR initial result)
-find which gates control those results and swap them
-build reverse dict of wires : gates instr
-17 bits have the wrong output but only 8 pairs of gates can be swapped
-initial wires cant be swapped
-normal bitwise add is like 1 XOR 1 s and an AND for the carry?
-for a swap to effect multiple z gates it must be effecting multiple outputs
-
-"""
-from enum import StrEnum
-
+from time import time
 GATES_FILENAME = "Aoc24/input.txt"
 
 class Wire(object):
@@ -113,12 +97,11 @@ def calc_gates(gates):
             return
 
 def main():
+    start_time = time()
     gates = load_gates(GATES_FILENAME)
     calc_gates(gates)
-    bin_x = dict_gates_to_binary(gates, "x")
-    bin_y = dict_gates_to_binary(gates, "y")
-    bin_z = dict_gates_to_binary(gates, "z")
-    print(bin_x, bin_y, bin_z)
-
+    print(f"Value on z wires {dict_gates_to_binary(gates, "z")}")
+    end_time = time()
+    print(f"Time: {end_time - start_time}")
 if __name__ == ("__main__"):
     main()
